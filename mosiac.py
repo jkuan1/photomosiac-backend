@@ -1,6 +1,23 @@
 import numpy as np
-import math
+import os, math
 from PIL import Image
+Image.MAX_IMAGE_PIXELS = None
+
+def getImages(directory):
+    files = os.listdir(directory)
+    images = []
+    for file in files:
+        filePath = os.path.abspath(os.path.join(directory, file))
+        
+        try:
+            fp = open(filePath, "rb")
+            im = Image.open(fp)
+            images.append(im)
+            im.load()
+            fp.close()
+        except:
+            print("Invalid image: %s" % (filePath,))
+    return (images)
 
 def rgbAverage(image):
     img = np.array(image)
@@ -23,15 +40,53 @@ def matchImage(target_avg, avgs):
     min_index = 0
     min_dist = float("inf")
     
-    avg=avgs
     for avg in avgs:
         dist = math.sqrt((target_avg[0] - avg[0])**2 + (target_avg[1] - avg[1])**2 + (target_avg[2] - avg[2])**2)
+        if dist < min_dist:
+            min_dist = dist
+            min_index = index
+        index += 1
+    return (min_index)
 
-    return dist
+def createImageGrid(images, dimensions):
+    m, n = dimensions
+    width = max([img.size[0] for img in images])
+    height = max([img.size[1] for img in images])
+    grid_img = Image.new('RGB', (n * width, m * height))
 
+    for index in range(len(images)):
+        row = int(index / n)
+        col = index - n * row
+        grid_img.paste(images[index], (col * width, row * height))
+    return (grid_img)
 
-test_image = Image.open("blep.jpg")
-test_avg = rgbAverage(test_image)
-match_image = Image.open("ESO_Centaurus_A_LABOCA.jpg")
-match_avg = rgbAverage(match_image)
-print(matchImage(test_avg, match_avg))
+def photoMosiac(target_image, input_images, grid_size):
+    target_images = splitImage(target_image, grid_size)
+    output_images = []
+    count = 0
+    # batch_size 
+    avgs = []
+    for img in input_images:
+        try:
+            avgs.append(rgbAverage(img))
+        except ValueError:
+            continue
+    
+    for img in target_images:
+        avg = rgbAverage(img)
+        match_index = matchImage(avg, avgs)
+        output_images.append(input_images[match_index])
+        if count > 0 and batch size > 10 and count % batch_size is 0:
+            print('processed %d of %d...' % (count, len(target_images)))
+        count += 1
+
+    mosiac_image = createImageGrid(output_images, grid_size)
+    return (mosiac_image)
+
+# test_image = Image.open("blep.jpg")
+# test_avg = rgbAverage(test_image)
+# match_image = Image.open("ESO_Centaurus_A_LABOCA.jpg")
+# match_avg = rgbAverage(match_image)
+# images=getImages("./input_images")
+
+    

@@ -22,3 +22,4 @@ var/
 # Everything else
 venv/
 node_modules
+input_images
