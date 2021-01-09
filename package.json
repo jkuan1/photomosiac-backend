@@ -1,0 +1,22 @@
+{
+  "name": "photomosiac-backend",
+  "version": "1.0.0",
+  "description": "backend for the photomosiac app nwhacks 2021",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jkuan1/photomosiac-backend.git"
+  },
+  "author": "Justin Kuan, Thien Ho",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jkuan1/photomosiac-backend/issues"
+  },
+  "homepage": "https://github.com/jkuan1/photomosiac-backend#readme",
+  "devDependencies": {
+    "serverless-python-requirements": "^5.1.0"
+  }
+}

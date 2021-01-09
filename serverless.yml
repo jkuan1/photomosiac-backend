@@ -1,0 +1,29 @@
+
+service: photomosiac-backend
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+
+  stage: dev
+  region: us-west-2
+
+package:
+  exclude:
+   - venv/
+
+functions:
+  hello:
+    handler: handler.hello
+    layers: 
+      - { Ref: PythonRequirementsLambdaLayer }
+
+plugins:
+  - serverless-python-requirements
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    layer: true
