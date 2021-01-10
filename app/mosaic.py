@@ -2,6 +2,7 @@ import numpy as np
 import os, math, io
 from boto3 import Session
 from PIL import Image
+import sys
 
 Image.MAX_IMAGE_PIXELS = None
 
@@ -81,10 +82,11 @@ def photoMosaic(target_image, grid_size, input_images=None):
 
     for img in input_images:
         try:
+            img.thumbnail(dims)
             avgs.append(rgbAverage(img))
         except ValueError:
             continue
-    
+
     for img in target_images:
         avg = rgbAverage(img)
         match_index = matchImage(avg, avgs)
@@ -113,24 +115,23 @@ def boto3Images():
         img = Image.open(file_stream)
         images.append(img)
 
-        if len(images) > 5:
-            break
-
     return(images)
 
-# Replace with user imput
-# target_image = Image.open("../input_images/dino-reichmuth-FdRMYSm7_8E-unsplash.jpg")
+        
 
-# Replace with bank of images
+
+# # Replace with user imput
+# target_image = Image.open("../input_images/spacex-TV2gg2kZD1o-unsplash.jpg")
+
+# # Replace with bank of images
 # input_images = getImages("../input_images")
-# input_images = boto3Images()
 
 # if input_images == []:
 #     print("No images found")
 #     exit()
 
-# Replace with user input
-# grid_size = (128, 128)
+# # Replace with user input
+# grid_size = (256, 256)
 
 # # Replace with user input
 # output_file_name = "mosaic.jpg"
@@ -138,9 +139,6 @@ def boto3Images():
 # dims = (int(target_image.size[0] / grid_size[1]), int(target_image.size[1] / grid_size[0]))
 # print("Max tile dimensions: %s" % (dims,))
 
-# # Resizes img in input_images
-# for img in input_images:
-#     img.thumbnail(dims)
-
-# mosaic_file = photoMosaic(target_image, input_images, grid_size)
+# mosaic_file = photoMosaic(target_image, grid_size)
+# mosaic_file.save("../output_images/%s" % (output_file_name))
 # mosaic_file.show()
