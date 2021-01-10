@@ -60,7 +60,7 @@ def createImageGrid(images, dimensions):
         grid_img.paste(images[index], (col * width, row * height))
     return (grid_img)
 
-def photoMosiac(target_image, input_images, grid_size):
+def photoMosaic(target_image, input_images, grid_size):
     target_images = splitImage(target_image, grid_size)
     output_images = []
     count = 0
@@ -80,8 +80,8 @@ def photoMosiac(target_image, input_images, grid_size):
             print('processed %d of %d...' % (count, len(target_images)))
         count += 1
 
-    mosiac_image = createImageGrid(output_images, grid_size)
-    return (mosiac_image)
+    mosaic_image = createImageGrid(output_images, grid_size)
+    return (mosaic_image)
 
 # test_image = Image.open("blep.jpg")
 # test_avg = rgbAverage(test_image)
