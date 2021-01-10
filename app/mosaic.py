@@ -1,5 +1,6 @@
 import numpy as np
-import os, math
+import os, math, io
+from boto3 import Session
 from PIL import Image
 
 Image.MAX_IMAGE_PIXELS = None
@@ -95,18 +96,38 @@ def photoMosaic(target_image, grid_size, input_images=None):
     mosaic_image = createImageGrid(output_images, grid_size)
     return (mosaic_image)
 
-# # Replace with user imput
-# target_image = Image.open("./input_images/blep.jpg")
+def boto3Images():
+    ACCESS_KEY = os.environ.get("aws_id")
+    SECRET_KEY = os.environ.get("aws_secret")
+    images = []
 
-# # Replace with bank of images
-# input_images = getImages("./input_images")
+    session = Session(aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
+
+    s3 = session.resource('s3')
+    bucket = s3.Bucket('photos-nwhacks-2021')
+
+    for s3_file in bucket.objects.all():
+        object = bucket.Object(s3_file.key)
+        file_stream = io.BytesIO()
+        object.download_fileobj(file_stream)
+        img = Image.open(file_stream)
+        images.append(img)
+
+    return(images)
+
+# Replace with user imput
+# target_image = Image.open("../input_images/dino-reichmuth-FdRMYSm7_8E-unsplash.jpg")
+
+# Replace with bank of images
+# input_images = getImages("../input_images")
+input_images = boto3Images()
 
 # if input_images == []:
 #     print("No images found")
 #     exit()
 
-# # Replace with user input
-# grid_size = (400, 400)
+# Replace with user input
+grid_size = (128, 128)
 
 # # Replace with user input
 # output_file_name = "mosaic.jpg"
