@@ -112,7 +112,7 @@ def boto3Images():
     return(images)
 
 # Replace with user imput
-target_image = Image.open("../input_images/nasa-NuE8Nu3otjo-unsplash.jpg")
+target_image = Image.open("../input_images/dino-reichmuth-FdRMYSm7_8E-unsplash.jpg")
 
 # Replace with bank of images
 # input_images = getImages("../input_images")
