@@ -23,4 +23,4 @@ var/
 venv/
 node_modules/
 input_images/
-__pycahce__/
+__pycache__/
