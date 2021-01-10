@@ -68,12 +68,16 @@ def createImageGrid(images, dimensions):
     return (grid_img)
 
 # Create a photomosaic of the target image using a bank of images
-def photoMosaic(target_image, input_images, grid_size):
+def photoMosaic(target_image, grid_size, input_images=None):
     target_images = splitImage(target_image, grid_size)
     output_images = []
     count = 0
     batch_size = int(len(target_images) / 10)
     avgs = []
+
+    if input_images is None:
+        input_images = boto3Images()
+        pass
 
     for img in input_images:
         try:
@@ -109,31 +113,34 @@ def boto3Images():
         img = Image.open(file_stream)
         images.append(img)
 
+        if len(images) > 5:
+            break
+
     return(images)
 
 # Replace with user imput
-target_image = Image.open("../input_images/dino-reichmuth-FdRMYSm7_8E-unsplash.jpg")
+# target_image = Image.open("../input_images/dino-reichmuth-FdRMYSm7_8E-unsplash.jpg")
 
 # Replace with bank of images
 # input_images = getImages("../input_images")
-input_images = boto3Images()
+# input_images = boto3Images()
 
-if input_images == []:
-    print("No images found")
-    exit()
-
-# Replace with user input
-grid_size = (128, 128)
+# if input_images == []:
+#     print("No images found")
+#     exit()
 
 # Replace with user input
-output_file_name = "mosaic.jpg"
+# grid_size = (128, 128)
 
-dims = (int(target_image.size[0] / grid_size[1]), int(target_image.size[1] / grid_size[0]))
-print("Max tile dimensions: %s" % (dims,))
+# # Replace with user input
+# output_file_name = "mosaic.jpg"
 
-# Resizes img in input_images
-for img in input_images:
-    img.thumbnail(dims)
+# dims = (int(target_image.size[0] / grid_size[1]), int(target_image.size[1] / grid_size[0]))
+# print("Max tile dimensions: %s" % (dims,))
 
-mosaic_file = photoMosaic(target_image, input_images, grid_size)
-mosaic_file.show()
+# # Resizes img in input_images
+# for img in input_images:
+#     img.thumbnail(dims)
+
+# mosaic_file = photoMosaic(target_image, input_images, grid_size)
+# mosaic_file.show()
