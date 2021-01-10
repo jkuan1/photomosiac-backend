@@ -1,6 +1,7 @@
 import numpy as np
 import os, math
 from PIL import Image
+
 Image.MAX_IMAGE_PIXELS = None
 
 # Obtain images from a directory to build the photo mosaic from
