@@ -13,11 +13,17 @@ provider:
 
 package:
   exclude:
-   - venv/
+   - venv/**
+   - node_modules/**
+   - .serverless/
+   - input_images/**
+   - tests/**
+   - blep.jpg
 
 functions:
-  hello:
-    handler: handler.hello
+
+  mosaic:
+    handler: app.handler.handler
     layers: 
       - { Ref: PythonRequirementsLambdaLayer }
 

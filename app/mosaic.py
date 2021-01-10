@@ -67,12 +67,16 @@ def createImageGrid(images, dimensions):
     return (grid_img)
 
 # Create a photomosaic of the target image using a bank of images
-def photoMosaic(target_image, input_images, grid_size):
+def photoMosaic(target_image, grid_size, input_images=None):
     target_images = splitImage(target_image, grid_size)
     output_images = []
     count = 0
     batch_size = int(len(target_images) / 10)
     avgs = []
+
+    if input_images is None:
+        #boto3 function
+        pass
 
     for img in input_images:
         try:
@@ -91,28 +95,28 @@ def photoMosaic(target_image, input_images, grid_size):
     mosaic_image = createImageGrid(output_images, grid_size)
     return (mosaic_image)
 
-# Replace with user imput
-target_image = Image.open("./input_images/blep.jpg")
+# # Replace with user imput
+# target_image = Image.open("./input_images/blep.jpg")
 
-# Replace with bank of images
-input_images = getImages("./input_images")
+# # Replace with bank of images
+# input_images = getImages("./input_images")
 
-if input_images == []:
-    print("No images found")
-    exit()
+# if input_images == []:
+#     print("No images found")
+#     exit()
 
-# Replace with user input
-grid_size = (400, 400)
+# # Replace with user input
+# grid_size = (400, 400)
 
-# Replace with user input
-output_file_name = "mosaic.jpg"
+# # Replace with user input
+# output_file_name = "mosaic.jpg"
 
-dims = (int(target_image.size[0] / grid_size[1]), int(target_image.size[1] / grid_size[0]))
-print("Max tile dimensions: %s" % (dims,))
+# dims = (int(target_image.size[0] / grid_size[1]), int(target_image.size[1] / grid_size[0]))
+# print("Max tile dimensions: %s" % (dims,))
 
-# Resizes img in input_images
-for img in input_images:
-    img.thumbnail(dims)
+# # Resizes img in input_images
+# for img in input_images:
+#     img.thumbnail(dims)
 
-mosaic_file = photoMosaic(target_image, input_images, grid_size)
-mosaic_file.show()
+# mosaic_file = photoMosaic(target_image, input_images, grid_size)
+# mosaic_file.show()
