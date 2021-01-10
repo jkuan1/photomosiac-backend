@@ -76,7 +76,7 @@ def photoMosaic(target_image, grid_size, input_images=None):
     avgs = []
 
     if input_images is None:
-        #boto3 function
+        input_images = boto3Images()
         pass
 
     for img in input_images:
@@ -113,6 +113,9 @@ def boto3Images():
         img = Image.open(file_stream)
         images.append(img)
 
+        if len(images) > 5:
+            break
+
     return(images)
 
 # Replace with user imput
@@ -120,14 +123,14 @@ def boto3Images():
 
 # Replace with bank of images
 # input_images = getImages("../input_images")
-input_images = boto3Images()
+# input_images = boto3Images()
 
 # if input_images == []:
 #     print("No images found")
 #     exit()
 
 # Replace with user input
-grid_size = (128, 128)
+# grid_size = (128, 128)
 
 # # Replace with user input
 # output_file_name = "mosaic.jpg"

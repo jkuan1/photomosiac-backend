@@ -24,6 +24,8 @@ functions:
 
   mosaic:
     handler: app.handler.handler
+    memorySize: 1000
+    timeout: 60
     layers: 
       - { Ref: PythonRequirementsLambdaLayer }
 
