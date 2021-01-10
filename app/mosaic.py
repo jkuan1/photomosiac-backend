@@ -1,6 +1,7 @@
 import numpy as np
 import os, math
 from PIL import Image
+
 Image.MAX_IMAGE_PIXELS = None
 
 def getImages(directory):
@@ -64,7 +65,7 @@ def photoMosaic(target_image, input_images, grid_size):
     target_images = splitImage(target_image, grid_size)
     output_images = []
     count = 0
-    # batch_size 
+    batch_size = 256
     avgs = []
     for img in input_images:
         try:
@@ -76,7 +77,7 @@ def photoMosaic(target_image, input_images, grid_size):
         avg = rgbAverage(img)
         match_index = matchImage(avg, avgs)
         output_images.append(input_images[match_index])
-        if count > 0 and batch size > 10 and count % batch_size is 0:
+        if count > 0 and batch_size > 10 and count % batch_size is 0:
             print('processed %d of %d...' % (count, len(target_images)))
         count += 1
 
