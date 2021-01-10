@@ -31,7 +31,6 @@ def rgbAverage(image):
 def splitImage(image, size):
     W, H = image.size[0], image.size[1] #Target image dimensions
     m, n = size #Split image size
-    print("W %d, H %d, m %d, n %d" % (W, H, m, n))
     w, h = int(W / n), int(H / m)
     imgs = []
     for j in range(m):
