@@ -80,8 +80,11 @@ def photoMosaic(target_image, grid_size, input_images=None):
         input_images = boto3Images()
         pass
 
+    dims = (int(target_image.size[0] / grid_size[1]), int(target_image.size[1] / grid_size[0]))
+
     for img in input_images:
         try:
+            
             img.thumbnail(dims)
             avgs.append(rgbAverage(img))
         except ValueError:

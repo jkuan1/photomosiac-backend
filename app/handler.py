@@ -21,16 +21,34 @@ def handler(event, context):
     # print(img)
     
     # mosaic = photoMosaic(img, (256, 256))
-    filename = '/tmp/tmp.jpg'  # I assume you have a way of picking unique filenames
+    try:
+        filename = '/tmp/tmp.jpg' 
+        with open(filename, 'wb') as f:
+            f.write(body)
+    except:
+        filename = "tmp.jpg"
+        with open(filename, 'wb') as f:
+            f.write(body)
+
     with open(filename, 'wb') as f:
         f.write(body)
         
-    mosaic = photoMosaic(Image.open(filename), (32,32), None)
+    mosaic = photoMosaic(Image.open(filename), (128,128), None)
 
     logger.info("FINISHED")
 
-    
-    return mosaic
+    mosaic.save(filename)
+
+    encoded_string = ""
+
+    with open(filename, 'rb') as f:
+        encoded_string = base64.b64encode(f.read()).decode("utf-8")
+
+    logger.info("RETURN")
+
+    return { "picture": json.dumps(encoded_string) }
+
+        
 
     # except Exception as exp:
     #     print(exp)
