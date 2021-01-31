@@ -1,18 +1,16 @@
 import unittest
-from ...app import mosaic
+from ...app.handler import Mosaic
 
 
 class TestMosaic(unittest.TestCase):
 
-    def test_rbg_ave(self):
+    def test_Mosaic(self):
 
-        image = "placeholder"
-        ans = "placeholder"
+        
 
-        ave = mosaic.rgbAverage(image)
-        self.assertEqual(ave, ans)
-
-        return
+        mosaic_file = Mosaic(target_image, grid_size).render()
+        mosaic_file.save("./test_image")
+        mosaic_file.show()
 
 if __name__ == "__main__":
     unittest.main()
