@@ -38,9 +38,46 @@ def handler(event, context):
 
     return output
 
+
+
+
+
+
 class Mosaic():
 
-    def __init__()
+    def __init__(self, target_image, grid_size, input_imges):
+
+        target_images = split_image(target_image, grid_size)
+        output_images = []
+        count = 0
+        batch_size = int(len(target_images) / 10)
+        avgs = []
+
+        if input_images is None:
+            input_images = boto3Images()
+            pass
+
+        dims = (int(target_image.size[0] / grid_size[1]), int(target_image.size[1] / grid_size[0]))
+
+        for img in input_images:
+            try:
+                
+                img.thumbnail(dims)
+                avgs.append(rgbAverage(img))
+            except ValueError:
+                continue
+
+        for img in target_images:
+            avg = rgbAverage(img)
+            match_index = matchImage(avg, avgs)
+            output_images.append(input_images[match_index])
+            if count > 0 and batch_size > 10 and count % batch_size == 0:
+                print('Processed %d of %d...' % (count, len(target_images)))
+            count += 1
+
+        mosaic_image = createImageGrid(output_images, grid_size)
+        return mosaic_image
+
 
     def generate(self):
         """
