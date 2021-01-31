@@ -25,3 +25,4 @@ node_modules/
 input_images/
 output_images/
 __pycache__/
+.vscode/
