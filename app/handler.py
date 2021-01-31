@@ -41,17 +41,15 @@ def handler(event, context):
 
 class Mosaic():
 
-    self.target_images = []
-    self.mosaic_pieces = []
+    target_images = []
+    mosaic_pieces = []
 
-    def __init__(self, target_image, grid_size, input_images):
+    def __init__(self, target_image, grid_size, input_images = None):
         
         #function splits the target image into a grid
         self._split_image(target_image, grid_size)
-        
-        avgs = []
-        batch_size = int(len(self.target_images) / 10)
-        count = 0
+        self.avgs = []
+
         output_images = []
     
         if input_images is None:
@@ -62,7 +60,7 @@ class Mosaic():
         for img in self.mosaic_pieces:
             try:
                 img.thumbnail(dims)
-                avgs.append(self._rgb_ave(img))
+                self.avgs.append(self._rgb_ave(img))
             except ValueError:
                 continue
 
@@ -70,9 +68,6 @@ class Mosaic():
             avg = self._rgb_ave(img)
             match_index = self._match_image(avg)
             output_images.append(self.mosaic_pieces[match_index])
-
-            if count > 0 and batch_size > 10 and count % batch_size == 0:
-                count += 1
 
         self.mosaic_image = self._create_image_grid(output_images, grid_size)
 
@@ -100,7 +95,7 @@ class Mosaic():
 
 
     # Obtain images to build the photo mosaic from
-    def _get_images(directory):
+    def _get_images(self):
 
         url = "https://api.unsplash.com/photos/random?count=10"
         payload={}
@@ -109,15 +104,23 @@ class Mosaic():
             'Authorization': 'Client-ID ' + os.environ.get("IMAGE_API_TOKEN") 
         }
 
-        response = requests.request("GET", url, headers=headers, data=payload)
+        response = requests.request("GET", url, headers=headers, data=payload).json()
 
+        count = 0
         for img in response:
-            im = Image.open(img["urls"]["raw"])
-            self.mosaic_pieces.append(im)
+
+            im = requests.get(img["urls"]["raw"])
+
+            file = open(f"test{str(count)}.jpg", "wb")
+            file.write(im.content)
+            file.close()
+            
+            self.mosaic_pieces.append(Image.open(f"test{str(count)}.jpg"))
+            count += 1
         
 
     # Average RGB values into a tuple of R, G, B averages
-    def _rgb_ave(image):
+    def _rgb_ave(self, image):
         img = np.array(image)
         w, h, d = img.shape
         test = img.reshape(w * h, d)
@@ -125,21 +128,21 @@ class Mosaic():
 
 
     # Matches each target avg with the closest avg from the image bank
-    def _match_image(target_avg):
+    def _match_image(self,target_avg):
         index = 0
         min_index = 0
         min_dist = float("inf")
         
-        for avg in avgs:
+        for avg in self.avgs:
             dist = math.sqrt((target_avg[0] - avg[0])**2 + (target_avg[1] - avg[1])**2 + (target_avg[2] - avg[2])**2)
             if dist < min_dist:
                 min_dist = dist
                 min_index = index
             index += 1
-        return (min_index)
+        return min_index
 
     # Creates a grid to layout new images on
-    def _create_image_grid(images, dimensions):
+    def _create_image_grid(self,images, dimensions):
         m, n = dimensions
         width = max([img.size[0] for img in images])
         height = max([img.size[1] for img in images])
