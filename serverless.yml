@@ -26,9 +26,13 @@ functions:
     handler: app.handler.handler
     memorySize: 1000
     timeout: 60
-    cors: true
+    events:
+      - http:
+        cors: true
     layers: 
       - { Ref: PythonRequirementsLambdaLayer }
+    environment:
+      IMAGE_API_TOKEN: ${env: IMAGE_API_TOKEN}
 
 plugins:
   - serverless-python-requirements
