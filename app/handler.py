@@ -27,10 +27,17 @@ def handler(event, context):
             f.write(body)
     
     #create the mosaic 
-    ouput_image = Mosaic(Image.open(filename), (32,32), None)
+    output_image = Mosaic(Image.open(filename), (32,32), None)
     output_image.render().save(filename)
 
-    output = {}
+    output = {
+        "statusCode": 200,
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Origin" : "*", 
+            "Access-Control-Allow-Credentials" : True 
+        },
+    }
 
     with open(filename, 'rb') as f:
         encoded_string = base64.b64encode(f.read()).decode("utf-8")
@@ -111,13 +118,23 @@ class Mosaic():
 
             im = requests.get(img["urls"]["raw"])
 
-            file = open(f"test{str(count)}.jpg", "wb")
-            file.write(im.content)
-            file.close()
-            
-            self.mosaic_pieces.append(Image.open(f"test{str(count)}.jpg"))
+
+            filename = f"/tmp/tmp{str(count)}.jpg"
+
+            try:
+                file = open(filename, "wb")
+                file.write(im.content)
+                file.close()
+            except:
+                filename = f"tmp{str(count)}.jpg"
+                file = open(filename, "wb")
+                file.write(im.content)
+                file.close()
+                
+            self.mosaic_pieces.append(Image.open(filename))
             count += 1
         
+        return
 
     # Average RGB values into a tuple of R, G, B averages
     def _rgb_ave(self, image):
@@ -153,4 +170,3 @@ class Mosaic():
             col = index - n * row
             grid_img.paste(images[index], (col * width, row * height))
         return (grid_img)
-
