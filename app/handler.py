@@ -27,7 +27,7 @@ def handler(event, context):
             f.write(body)
     
     #create the mosaic 
-    ouput_image = Mosaic(Image.open(filename), (128,128), None)
+    ouput_image = Mosaic(Image.open(filename), (32,32), None)
     output_image.render().save(filename)
 
     output = {}
